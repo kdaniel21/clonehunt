@@ -1,9 +1,11 @@
-import { Button, Icon } from '@chakra-ui/react'
+import { Button, Icon, useToast } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
 import PasswordInput from './PasswordInput'
 import * as yup from 'yup'
 import { FaSignInAlt } from 'react-icons/fa'
 import FormInputField from './FormInputField'
+import { useLoginMutation } from '../../generated/graphql'
+import { useHistory } from 'react-router-dom'
 
 interface LoginFormValues {
   username: string
@@ -21,7 +23,16 @@ const LoginForm: React.FC = () => {
     password: yup.string().min(6).required().label('Password'),
   })
 
-  const onLogin = () => {}
+  const [login] = useLoginMutation()
+  const history = useHistory()
+  const toast = useToast()
+  const onLogin = async (value: LoginFormValues) => {
+    await login({ variables: value })
+
+    toast({ title: 'Success', status: 'success', description: 'Successfully logged in!' })
+
+    history.push('/products')
+  }
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onLogin}>
@@ -33,6 +44,7 @@ const LoginForm: React.FC = () => {
           </FormInputField>
 
           <Button
+            type="submit"
             mt="3"
             leftIcon={<Icon as={FaSignInAlt} />}
             colorScheme="orange"
