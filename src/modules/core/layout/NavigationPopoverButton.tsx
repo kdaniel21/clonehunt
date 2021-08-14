@@ -25,7 +25,7 @@ export type NavigationPopoverButtonProps = {
 
 const NavigationPopoverButton: React.FC<NavigationPopoverButtonProps> = (props) => {
   const itemButtons = props.items.map(({ text, description, to, Icon }) => (
-    <Link to={to}>
+    <Link key={to} to={to}>
       <Flex
         align="center"
         py="1"

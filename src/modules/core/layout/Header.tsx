@@ -60,7 +60,7 @@ const navigationItems: NavigationPopoverButtonProps[] = [
     ],
   },
   {
-    text: 'Community',
+    text: 'Tools',
     items: [
       {
         text: 'Founder Club',
@@ -80,11 +80,18 @@ const navigationItems: NavigationPopoverButtonProps[] = [
 
 const Header: React.FC = () => {
   const navigationButtons = navigationItems.map((item) => (
-    <NavigationPopoverButton text={item.text} items={item.items} />
+    <NavigationPopoverButton key={item.text} text={item.text} items={item.items} />
   ))
 
   return (
-    <chakra.header overflowY="hidden" w="full" borderTopColor="brand.400" borderTop="6px solid" bg="white">
+    <chakra.header
+      overflowY="hidden"
+      w="full"
+      borderTopColor="brand.400"
+      borderTop="6px solid"
+      bg="white"
+      boxShadow="0 0 1px 1px rgba(33,41,63,.1)"
+    >
       <chakra.div h="4.5rem" mx="2rem">
         <Flex w="full" h="full" px="6" align="center" justify="space-between">
           <Flex align="center">
@@ -115,10 +122,10 @@ const Header: React.FC = () => {
 
           <Flex flexGrow={1} justify="flex-end">
             <NavigationButton text="How to post a product?" to="/help" />
-            <NavigationButton text="Sign in" to="/login" />
+            <NavigationButton text="Sign In" to="/login" />
 
             <Link to="/register">
-              <Button colorSchema="teal" variant="solid">
+              <Button colorScheme="orange" variant="solid">
                 Sign Up
               </Button>
             </Link>

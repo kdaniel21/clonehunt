@@ -11,7 +11,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
     <Flex pos="relative" direction="column" height="100vh" width="100vw">
       <Header />
 
-      <chakra.main flexGrow={1} overflowY="auto" width="full" bg="gray.100" pt="8" pb="4">
+      <chakra.main flexGrow={1} overflowY="auto" width="full" pt="8" pb="4">
         <chakra.div maxW="1366px" width="full" mx="auto">
           {props.children}
         </chakra.div>
