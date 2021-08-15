@@ -1,10 +1,13 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { chakra, Flex, HStack, InputGroup, InputLeftElement, Input, Button } from '@chakra-ui/react'
+import { chakra, Flex, HStack, InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
 import { FaBoxOpen, FaEye, FaTag, FaTaxi, FaMicrophoneAlt, FaPenNib, FaHeart, FaUsers, FaShip } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { UserConsumer } from '../../auth/UserContext'
+import GuestHeader from './GuestHeader'
 import Logo from './Logo'
 import NavigationButton from './NavigationButton'
 import NavigationPopoverButton, { NavigationPopoverButtonProps } from './NavigationPopoverButton'
+import UserHeader from './UserHeader'
 
 const navigationItems: NavigationPopoverButtonProps[] = [
   {
@@ -120,15 +123,10 @@ const Header: React.FC = () => {
             </chakra.div>
           </Flex>
 
-          <Flex flexGrow={1} justify="flex-end">
-            <NavigationButton text="How to post a product?" to="/help" />
-            <NavigationButton text="Sign In" to="/login" />
-
-            <Link to="/register">
-              <Button colorScheme="orange" variant="solid">
-                Sign Up
-              </Button>
-            </Link>
+          <Flex flexGrow={1} alignItems="center" justify="flex-end">
+            <UserConsumer>
+              {({ user, isLoading }) => (user || isLoading ? <UserHeader /> : <GuestHeader />)}
+            </UserConsumer>
           </Flex>
         </Flex>
       </chakra.div>

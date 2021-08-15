@@ -6,6 +6,7 @@ import Layout from './modules/core/layout/Layout'
 import { ApolloProvider } from '@apollo/client'
 import { useToast } from '@chakra-ui/react'
 import initApolloClient from './apolloClient'
+import { UserProvider } from './modules/auth/UserContext'
 
 function App() {
   // TODO: Organize the code in a way that doesn't require this
@@ -15,14 +16,16 @@ function App() {
 
   return (
     <ApolloProvider client={apolloClient}>
-      <Router>
-        <Layout>
-          <Route path="/" exact component={IndexPage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Route path="/product/:id" />
-        </Layout>
-      </Router>
+      <UserProvider>
+        <Router>
+          <Layout>
+            <Route path="/" exact component={IndexPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
+            <Route path="/product/:id" />
+          </Layout>
+        </Router>
+      </UserProvider>
     </ApolloProvider>
   )
 }
