@@ -13,13 +13,31 @@ const createErrorLink = (toast: useToastHook): ApolloLink =>
     if (graphQLErrors)
       graphQLErrors.forEach(({ message }) => toast({ status: 'error', title: 'Error', description: message }))
 
-    if (networkError) toast({ title: 'Network error', status: 'error', description: networkError })
+    if (networkError) toast({ title: 'Network error', status: 'error', description: networkError.message })
   })
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        products: {
+          keyArgs: ['startDate', 'endDate'],
+          merge(existing = { edges: [] }, incoming) {
+            if (!incoming) return existing
+            if (!existing) return incoming
+
+            return { ...incoming, edges: [...existing.edges, ...incoming.edges] }
+          },
+        },
+      },
+    },
+  },
+})
 
 const initApolloClient = (toast: useToastHook) =>
   new ApolloClient({
     link: from([createErrorLink(toast), httpLink]),
-    cache: new InMemoryCache(),
+    cache,
   })
 
 export default initApolloClient

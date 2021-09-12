@@ -18,4 +18,5 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 }
 
 export const UserConsumer = UserContext.Consumer
+
 export default UserContext

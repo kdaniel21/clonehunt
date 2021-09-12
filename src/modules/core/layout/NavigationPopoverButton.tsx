@@ -43,7 +43,7 @@ const NavigationPopoverButton: React.FC<NavigationPopoverButtonProps> = (props) 
           <Heading as="h5" size="sm">
             {text}
           </Heading>
-          <Text color="gray.500" fontSize="sm">
+          <Text color="GrayText" fontSize="sm">
             {description}
           </Text>
         </chakra.div>

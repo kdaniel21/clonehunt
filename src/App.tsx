@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
 import IndexPage from './pages'
 import LoginPage from './pages/login'
 import RegisterPage from './pages/register'
@@ -7,6 +7,8 @@ import { ApolloProvider } from '@apollo/client'
 import { useToast } from '@chakra-ui/react'
 import initApolloClient from './apolloClient'
 import { UserProvider } from './modules/auth/UserContext'
+import ProductsPage from './pages/products'
+import ProductPage from './pages/product'
 
 function App() {
   // TODO: Organize the code in a way that doesn't require this
@@ -19,10 +21,13 @@ function App() {
       <UserProvider>
         <Router>
           <Layout>
-            <Route path="/" exact component={IndexPage} />
+            <Route path="/" exact component={ProductsPage} />
             <Route path="/login" component={LoginPage} />
             <Route path="/register" component={RegisterPage} />
-            <Route path="/product/:id" />
+            <Route path="/products">
+              <Redirect to="/" />
+            </Route>
+            <Route path="/p/:id" component={ProductPage} />
           </Layout>
         </Router>
       </UserProvider>

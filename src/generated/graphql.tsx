@@ -37,7 +37,7 @@ export type Mutation = {
   updateProduct: Product;
   deleteProduct: MessageType;
   upvoteProduct: Product;
-  downvoteProduct: Product;
+  removeProductUpvote: Product;
 };
 
 
@@ -65,22 +65,22 @@ export type MutationUpdateProductArgs = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationDeleteProductArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type MutationUpvoteProductArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
-export type MutationDownvoteProductArgs = {
-  id: Scalars['String'];
+export type MutationRemoveProductUpvoteArgs = {
+  id: Scalars['ID'];
 };
 
 export type PageInfoType = {
@@ -104,7 +104,8 @@ export type Product = {
   name: Scalars['String'];
   description: Scalars['String'];
   url: Scalars['String'];
-  numOfUpvotes: Scalars['Float'];
+  upvoteCount: Scalars['Float'];
+  isUpvotedByCurrentUser: Scalars['Boolean'];
   user: User;
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
@@ -125,13 +126,15 @@ export type Query = {
 
 
 export type QueryProductArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
 export type QueryProductsArgs = {
   first: Scalars['Float'];
   after?: Maybe<Scalars['String']>;
+  startDate?: Maybe<Scalars['DateTime']>;
+  endDate?: Maybe<Scalars['DateTime']>;
 };
 
 export type User = {
@@ -169,6 +172,37 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'MessageType', message: string } };
+
+export type GetProductQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetProductQuery = { __typename?: 'Query', product: { __typename?: 'Product', id: string, name: string, description: string, url: string, upvoteCount: number, isUpvotedByCurrentUser: boolean, createdAt: any, user: { __typename?: 'User', id: string, username: string } } };
+
+export type GetProductsQueryVariables = Exact<{
+  first: Scalars['Float'];
+  after?: Maybe<Scalars['String']>;
+  startDate: Scalars['DateTime'];
+  endDate: Scalars['DateTime'];
+}>;
+
+
+export type GetProductsQuery = { __typename?: 'Query', products: { __typename?: 'PageType', totalCount: number, edges: Array<{ __typename?: 'ProductTypeEdge', node: { __typename?: 'Product', id: string, name: string, description: string, upvoteCount: number, isUpvotedByCurrentUser: boolean } }>, pageInfo: { __typename?: 'PageInfoType', hasNextPage: boolean, endCursor?: Maybe<string> } } };
+
+export type RemoveProductUpvoteMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RemoveProductUpvoteMutation = { __typename?: 'Mutation', removeProductUpvote: { __typename?: 'Product', upvoteCount: number, isUpvotedByCurrentUser: boolean } };
+
+export type UpvoteProductMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UpvoteProductMutation = { __typename?: 'Mutation', upvoteProduct: { __typename?: 'Product', upvoteCount: number, isUpvotedByCurrentUser: boolean } };
 
 
 export const CurrentUserDocument = gql`
@@ -311,3 +345,167 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const GetProductDocument = gql`
+    query getProduct($id: ID!) {
+  product(id: $id) {
+    id
+    name
+    description
+    url
+    upvoteCount
+    isUpvotedByCurrentUser
+    user {
+      id
+      username
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetProductQuery__
+ *
+ * To run a query within a React component, call `useGetProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductQuery(baseOptions: Apollo.QueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+      }
+export function useGetProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+        }
+export type GetProductQueryHookResult = ReturnType<typeof useGetProductQuery>;
+export type GetProductLazyQueryHookResult = ReturnType<typeof useGetProductLazyQuery>;
+export type GetProductQueryResult = Apollo.QueryResult<GetProductQuery, GetProductQueryVariables>;
+export const GetProductsDocument = gql`
+    query getProducts($first: Float!, $after: String, $startDate: DateTime!, $endDate: DateTime!) {
+  products(first: $first, after: $after, startDate: $startDate, endDate: $endDate) {
+    edges {
+      node {
+        id
+        name
+        description
+        upvoteCount
+        isUpvotedByCurrentUser
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useGetProductsQuery__
+ *
+ * To run a query within a React component, call `useGetProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetProductsQuery(baseOptions: Apollo.QueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+      }
+export function useGetProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+        }
+export type GetProductsQueryHookResult = ReturnType<typeof useGetProductsQuery>;
+export type GetProductsLazyQueryHookResult = ReturnType<typeof useGetProductsLazyQuery>;
+export type GetProductsQueryResult = Apollo.QueryResult<GetProductsQuery, GetProductsQueryVariables>;
+export const RemoveProductUpvoteDocument = gql`
+    mutation removeProductUpvote($id: ID!) {
+  removeProductUpvote(id: $id) {
+    upvoteCount
+    isUpvotedByCurrentUser
+  }
+}
+    `;
+export type RemoveProductUpvoteMutationFn = Apollo.MutationFunction<RemoveProductUpvoteMutation, RemoveProductUpvoteMutationVariables>;
+
+/**
+ * __useRemoveProductUpvoteMutation__
+ *
+ * To run a mutation, you first call `useRemoveProductUpvoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveProductUpvoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeProductUpvoteMutation, { data, loading, error }] = useRemoveProductUpvoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveProductUpvoteMutation(baseOptions?: Apollo.MutationHookOptions<RemoveProductUpvoteMutation, RemoveProductUpvoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveProductUpvoteMutation, RemoveProductUpvoteMutationVariables>(RemoveProductUpvoteDocument, options);
+      }
+export type RemoveProductUpvoteMutationHookResult = ReturnType<typeof useRemoveProductUpvoteMutation>;
+export type RemoveProductUpvoteMutationResult = Apollo.MutationResult<RemoveProductUpvoteMutation>;
+export type RemoveProductUpvoteMutationOptions = Apollo.BaseMutationOptions<RemoveProductUpvoteMutation, RemoveProductUpvoteMutationVariables>;
+export const UpvoteProductDocument = gql`
+    mutation upvoteProduct($id: ID!) {
+  upvoteProduct(id: $id) {
+    upvoteCount
+    isUpvotedByCurrentUser
+  }
+}
+    `;
+export type UpvoteProductMutationFn = Apollo.MutationFunction<UpvoteProductMutation, UpvoteProductMutationVariables>;
+
+/**
+ * __useUpvoteProductMutation__
+ *
+ * To run a mutation, you first call `useUpvoteProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpvoteProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upvoteProductMutation, { data, loading, error }] = useUpvoteProductMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpvoteProductMutation(baseOptions?: Apollo.MutationHookOptions<UpvoteProductMutation, UpvoteProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpvoteProductMutation, UpvoteProductMutationVariables>(UpvoteProductDocument, options);
+      }
+export type UpvoteProductMutationHookResult = ReturnType<typeof useUpvoteProductMutation>;
+export type UpvoteProductMutationResult = Apollo.MutationResult<UpvoteProductMutation>;
+export type UpvoteProductMutationOptions = Apollo.BaseMutationOptions<UpvoteProductMutation, UpvoteProductMutationVariables>;

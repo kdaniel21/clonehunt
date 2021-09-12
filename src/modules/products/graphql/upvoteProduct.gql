@@ -1,0 +1,6 @@
+mutation upvoteProduct($id: ID!) {
+  upvoteProduct(id: $id) {
+    upvoteCount
+    isUpvotedByCurrentUser
+  }
+}

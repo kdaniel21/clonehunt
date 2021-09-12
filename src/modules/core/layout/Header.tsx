@@ -88,6 +88,7 @@ const Header: React.FC = () => {
 
   return (
     <chakra.header
+      flexShrink={0}
       overflowY="hidden"
       w="full"
       borderTopColor="brand.400"

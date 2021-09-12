@@ -3,11 +3,11 @@ import { Formik, Form } from 'formik'
 import { FaUserPlus } from 'react-icons/fa'
 import { useHistory } from 'react-router-dom'
 import { useRegisterMutation } from '../generated/graphql'
-import Auth from '../modules/auth/Auth'
-import FormInputField from '../modules/auth/FormInputField'
-import FormSwitchField from '../modules/auth/FormSwitchField'
-import PasswordInput from '../modules/auth/PasswordInput'
+import Auth from '../modules/auth/components/Auth'
 import * as yup from 'yup'
+import FormInputField from '../modules/auth/components/FormInputField'
+import FormSwitchField from '../modules/auth/components/FormSwitchField'
+import PasswordInput from '../modules/auth/components/PasswordInput'
 
 interface RegisterFormValues {
   username: string

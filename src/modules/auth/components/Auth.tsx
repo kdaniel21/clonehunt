@@ -22,7 +22,7 @@ const Auth: React.FC<AuthProps> = ({ children, isRegisterMode }) => {
       <Heading as="h2" size="md">
         {headingText} on Clone Hunt
       </Heading>
-      <Text color="gray.500">
+      <Text color="GrayText">
         Join our community of friendly folks discovering and sharing the latest products in tech.
       </Text>
 

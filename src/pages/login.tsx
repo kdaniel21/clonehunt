@@ -3,10 +3,10 @@ import { Formik, Form } from 'formik'
 import { FaSignInAlt } from 'react-icons/fa'
 import { useHistory } from 'react-router-dom'
 import { CurrentUserDocument, useLoginMutation } from '../generated/graphql'
-import Auth from '../modules/auth/Auth'
-import FormInputField from '../modules/auth/FormInputField'
-import PasswordInput from '../modules/auth/PasswordInput'
+import Auth from '../modules/auth/components/Auth'
 import * as yup from 'yup'
+import FormInputField from '../modules/auth/components/FormInputField'
+import PasswordInput from '../modules/auth/components/PasswordInput'
 
 interface LoginFormValues {
   username: string

@@ -1,0 +1,6 @@
+mutation removeProductUpvote($id: ID!) {
+  removeProductUpvote(id: $id) {
+    upvoteCount
+    isUpvotedByCurrentUser
+  }
+}

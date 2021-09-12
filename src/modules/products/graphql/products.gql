@@ -1,0 +1,18 @@
+query getProducts($first: Float!, $after: String, $startDate: DateTime!, $endDate: DateTime!) {
+  products(first: $first, after: $after, startDate: $startDate, endDate: $endDate) {
+    edges {
+      node {
+        id
+        name
+        description
+        upvoteCount
+        isUpvotedByCurrentUser
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    totalCount
+  }
+}
